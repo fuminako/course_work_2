@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.Map;
+import java.util.Collection;
 import java.util.Scanner;
 
 import static Task.Personalization.PERSONAL;
@@ -27,10 +27,10 @@ public class Console {
                             inputTask(scanner);
                             break;
                         case 2:
-                            removeTask(scanner, TaskSchedule.taskList);
+                            removeTask(scanner, TaskSchedule.getAllTask());
                             break;
                         case 3:
-                            printTaskOnThisDay(scanner, TaskSchedule.taskList);
+                            printTaskOnThisDay(scanner);
                             break;
                         case 0:
                             break label;
@@ -104,6 +104,7 @@ public class Console {
                 } else {
                     throw new NoCorrectValueException();
                 }
+
             } catch (IllegalArgumentException e) {
                 System.out.println("Данных недостаточно");
             } catch (NoCorrectValueException e) {
@@ -115,13 +116,13 @@ public class Console {
 
     }
 
-    private static void removeTask(Scanner scanner, Map<Integer, ObjectTask> list) {
+    private static void removeTask(Scanner scanner, Collection<ObjectTask> tasks) {
         System.out.print("Введите id задачи: ");
         int taskId = scanner.nextInt();
         try {
             TaskSchedule.removeTask(taskId);
             System.out.println("Задача удалена");
-            for (ObjectTask task : list.values()) {
+            for (ObjectTask task : tasks) {
                 System.out.printf("Список задач: %n %s, описание: %s; %s %n ", task.getName(), task.getDescription(), task.getTaskRepeatability());
             }
         } catch (TaskNotFoundException e) {
@@ -138,7 +139,7 @@ public class Console {
         );
     }
 
-    private static void printTaskOnThisDay(Scanner scanner, Map<Integer, ObjectTask> list) {
+    private static void printTaskOnThisDay(Scanner scanner) {
         try {
             System.out.println("Введите дату в формате yyyy/MM/dd для получения списка задач ");
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -146,8 +147,8 @@ public class Console {
             if (TaskSchedule.getTaskOnDay(date).isEmpty()) {
                 System.out.println("Нет задач в этот день");
             } else {
-                for (ObjectTask task : list.values()) {
-                    System.out.printf("%s, дата задачи; %s, %s %n", task.getName(), task.getDateTime().toLocalDate(), task.getTaskRepeatability());
+                for (ObjectTask task : TaskSchedule.getTaskOnDay(date)) {
+                    System.out.printf("%s, дата задачи: %s, %s %n", task.getName(), task.getDateTime().toLocalDate(), task.getTaskRepeatability());
                 }
             }
         } catch (DateTimeParseException e) {

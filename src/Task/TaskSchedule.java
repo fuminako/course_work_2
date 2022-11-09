@@ -6,6 +6,10 @@ import java.util.*;
 public class TaskSchedule {
     public static Map<Integer, ObjectTask> taskList = new HashMap<>();
 
+    public static Collection<ObjectTask> getAllTask() {
+        return taskList.values();
+    }
+
     public static void fillTaskList(ObjectTask task) {
         taskList.put(task.getId(), task);
     }

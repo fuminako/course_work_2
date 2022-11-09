@@ -6,9 +6,6 @@ import Task.Personalization;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static Task.TaskSchedule.taskList;
-
-
 public class Weekly extends ObjectTask {
     public Weekly(String name, LocalDateTime dateTime, String description, Personalization personalization) {
         super(name, dateTime, description, personalization);
@@ -26,13 +23,12 @@ public class Weekly extends ObjectTask {
 
     public boolean appearsIn(LocalDate localDate) {
         boolean available = false;
-        for (ObjectTask task : taskList.values()) {
-            if (task.getDateTime().getDayOfWeek().equals(localDate.getDayOfWeek())) {
-                if (task.getDateTime().toLocalDate().isBefore(localDate) || task.getDateTime().toLocalDate().equals(localDate)) {
-                    available = true;
-                }
+        if (getDateTime().toLocalDate().getDayOfWeek().equals(localDate.getDayOfWeek())) {
+            if (getDateTime().toLocalDate().isBefore(localDate) || getDateTime().toLocalDate().equals(localDate)) {
+                available = true;
             }
         }
         return available;
     }
+
 }
